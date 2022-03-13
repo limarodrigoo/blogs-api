@@ -13,6 +13,7 @@
     "shelljs": "0.8.4"
   },
   "scripts": {
+    "build": "npm run drop && npm run prestart && npm run seed",
     "prestart": "npx sequelize-cli db:create && npx sequelize-cli db:migrate $",
     "start": "node index.js",
     "drop": "npx sequelize-cli db:drop $",
@@ -28,6 +29,7 @@
     "eslint-plugin-import": "2.22.1",
     "frisby": "2.1.2",
     "jest": "26.0.1",
+    "joi": "13.7.0",
     "nodemon": "^2.0.15",
     "sequelize-cli": "6.2.0",
     "supertest": "4.0.2"
