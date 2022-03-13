@@ -25,8 +25,7 @@ const loginUserValidate = async (req, res, next) => {
     }
     next();
   } catch (e) {
-    console.log(e.message);
-    return res.status(500).json({ message: 'Algo deu errado' });
+    next(e);
   }
 };
 

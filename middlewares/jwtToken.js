@@ -9,8 +9,7 @@ const generateToken = (req, res, next) => {
     req.token = token;
     next();
   } catch (e) {
-    console.log(e.message);
-    return res.status(500).json({ message: 'Algo deu errado' });
+    next(e);
   }
 };
 
@@ -30,8 +29,7 @@ const checkToken = (req, res, next) => {
     
     next();
   } catch (e) {
-    console.log(e.message);
-    return res.status(500).json({ message: 'Algo deu errado' });
+    next(e);
   }
 };
 
