@@ -1,13 +1,13 @@
 const modelAssociate = (models) => {
   models.BlogPost.belongsToMany(models.Category, {
     as: 'categories',
-    through: 'PostsCategories',
+    through: 'PostCategory',
     foreignKey: 'postId',
     otherKey: 'categoryId',
   });
   models.Category.belongsToMany(models.BlogPost, {
     as: 'posts',
-    through: 'PostsCategories',
+    through: 'PostCategory',
     foreignKey: 'categoryId',
     otherKey: 'postId',
   });
