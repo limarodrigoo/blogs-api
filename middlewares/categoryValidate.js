@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { Category } = require('../models');
+const { categoryIsValid } = require('../services/categoryService');
 
 const schema = Joi.object({
   name: Joi.string().required(),
@@ -19,13 +19,16 @@ const createCategoryValidate = (req, res, next) => {
   }
 };
 
-const categoryExists = (req, res, next) => {
+const categoryExists = async (req, res, next) => {
   try {
     const { categoryIds } = req.body;
-    categoryIds.forEach(async (cat) => { 
-      const exists = await Category.findOne({ where: { id: cat } });
-      if (!exists) return res.status(400).json({ message: '"categoryIds" not found' });
+    const isValid = categoryIds.map(async (id) => categoryIsValid(id));
+    Promise.all(isValid).then((result) => {
+      if (result.includes(null)) {
+        return res.status(400).json({ message: '"categoryIds" not found' });
+      }
     });
+    
     next();
   } catch (e) {
     next(e);
