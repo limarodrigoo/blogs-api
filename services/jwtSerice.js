@@ -1,5 +1,6 @@
 require('dotenv');
 const jwt = require('jsonwebtoken');
+const { findUserByEmail } = require('./userService');
 
 const jwtConfig = {
   expiresIn: '1d',
@@ -16,7 +17,14 @@ const isValidToken = (token) => {
   }
 };
 
+const getUserIdByToken = async (token) => {
+  const { email } = isValidToken(token);
+  const { id } = await findUserByEmail(email);
+  return id;
+};
+
 module.exports = {
   genToken,
   isValidToken,
+  getUserIdByToken,
 };
