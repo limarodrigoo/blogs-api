@@ -10,8 +10,9 @@ const createPost = async (req, res, next) => {
     const { id } = await User.findOne({ where: { email } });
     const newPost = await BlogPost.create({ title, userId: id, content });
     const categoriesPost = categoryIds.map((cat) =>
-      PostCategory.create({ postId: newPost.id, CategoryId: cat }));
-    Promise.all(categoriesPost);
+      PostCategory.create({ postId: newPost.id, categoryId: cat }));
+    const newCategoryPost = await Promise.all(categoriesPost);
+    console.log(newCategoryPost, '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     return res.status(201).json(newPost);
   } catch (e) {
     next(e);
