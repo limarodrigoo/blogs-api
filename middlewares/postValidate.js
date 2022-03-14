@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { BlogPost } = require('../models');
 
 const schema = Joi.object({
   title: Joi.string().required(),
@@ -21,6 +22,20 @@ const createPostValidate = (req, res, next) => {
   }
 };
 
+const idPostValidate = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const post = await BlogPost.findOne({ where: { id } });
+    if (!post) {
+      return res.status(404).json({ message: 'Post does not exist' });
+    }
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   createPostValidate,
+  idPostValidate,
 };

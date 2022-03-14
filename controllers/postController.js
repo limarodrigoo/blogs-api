@@ -36,7 +36,26 @@ const getAllPosts = async (req, res, next) => {
   }
 };
 
+const getPostById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const allPosts = await BlogPost
+      .findOne({ where: { id }, 
+        include:
+          [
+            { model: User, as: 'user', attributes: { exclude: 'password' } },
+            { model: Category, as: 'categories' },
+          ],
+        attributes: { exclude: 'UserId' },
+      });
+    return res.status(200).json(allPosts);
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
+  getPostById,
 };
