@@ -34,9 +34,29 @@ const findPostByIdFiltered = async (id) => {
 
 const findPostById = async (id) => BlogPost.findOne({ where: { id } });
 
+const findPostEdited = async (id) => BlogPost.findOne({
+  where: { id },
+  include: { model: Category, as: 'categories', attributes: { exclude: 'PostCategory' } },
+  attributes: { exclude: ['updated', 'published', 'UserId'] },
+});
+
+const editPostById = async (id, title, content) => {
+  const updated = Date.now();
+  const newPost = await BlogPost.update(
+    { title, content, updated }, {
+    where: {
+      id,
+    },
+  },
+  );
+  return newPost;
+};
+
 module.exports = {
   createNewPost,
   findAllPosts,
   findPostByIdFiltered,
   findPostById,
+  editPostById,
+  findPostEdited,
 };

@@ -7,6 +7,15 @@ const schema = Joi.object({
   categoryIds: Joi.array().required(),
 });
 
+const editSchema = Joi.object({
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+  categoryIds: Joi.any().forbidden()
+  .messages({
+    'any.unknown': 'Categories cannot be edited',
+  }),
+});
+
 const createPostValidate = (req, res, next) => {
   try {
     const { title, content, categoryIds } = req.body;
@@ -35,7 +44,22 @@ const idPostValidate = async (req, res, next) => {
   }
 };
 
+const editPostValidate = (req, res, next) => {
+  try {
+    const { title, content, categoryIds } = req.body;
+    const { error } = editSchema.validate({ title, content, categoryIds });
+    if (error) {
+      const { message } = error.details[0];
+      return res.status(400).json({ message });
+    }
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   createPostValidate,
   idPostValidate,
+  editPostValidate,
 };
