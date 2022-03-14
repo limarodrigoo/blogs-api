@@ -13,8 +13,14 @@ const Attributes = {
     type: DataTypes.INTEGER,
     foreingKey: true,
   },
-  published: DataTypes.DATE,
-  updated: DataTypes.DATE,
+  published: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+  updated: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
 };
 
 module.exports = (sequelize) => {
@@ -22,7 +28,7 @@ module.exports = (sequelize) => {
     'BlogPost',
     Attributes,
     {
-      timestamp: false,
+      timestamps: false,
       tableName: 'BlogPosts',
     },
   );
