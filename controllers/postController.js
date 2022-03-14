@@ -11,7 +11,6 @@ const createPost = async (req, res, next) => {
     const newPost = await BlogPost.create({ title, userId: id, content });
     const categoriesPost = categoryIds.map((cat) =>
       PostCategory.create({ postId: newPost.id, CategoryId: cat }));
-    console.log(categoriesPost);
     Promise.all(categoriesPost);
     return res.status(201).json(newPost);
   } catch (e) {
