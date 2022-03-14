@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { User } = require('../models');
+const { findUserByEmail } = require('../services/userService');
 
 const schema = Joi.object({
   displayName: Joi.string().min(8).required(),
@@ -17,7 +17,7 @@ const createUserValidate = async (req, res, next) => {
       const { message } = error.details[0] || error;
       return res.status(400).json({ message });
     }
-    const emailExists = await User.findOne({ where: { email } });
+    const emailExists = await findUserByEmail(email);
     if (emailExists) {
       return res.status(409).json({ message: 'User already registered' });
     }

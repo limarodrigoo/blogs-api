@@ -5,6 +5,13 @@ const categoryIsValid = async (cat) => {
   return found;
 };
 
-module.exports = { 
+const createNewCategory = async (name) =>
+  Category.create({ name });
+
+const findAllCategories = async () => Category.findAll();
+
+module.exports = {
   categoryIsValid,
+  createNewCategory,
+  findAllCategories,
 };

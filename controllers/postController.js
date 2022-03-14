@@ -1,5 +1,7 @@
-const { BlogPost, User, PostCategory, Category } = require('../models');
 const { isValidToken } = require('../services/jwtSerice');
+const { createNewPost, findAllPosts, findPostByIdFiltered } = require('../services/postService');
+const { findUserByEmail } = require('../services/userService');
+const { createPostCategory } = require('../services/postCategoryService');
 
 const createPost = async (req, res, next) => {
   try {
@@ -7,29 +9,20 @@ const createPost = async (req, res, next) => {
     const { title, content, categoryIds } = req.body;
 
     const { email } = isValidToken(authorization);
-    const { id } = await User.findOne({ where: { email } });
-    const newPost = await BlogPost.create({ title, userId: id, content });
+    const { id } = await findUserByEmail(email);
+    const newPost = await createNewPost(title, content, id);
     const categoriesPost = categoryIds.map((cat) =>
-      PostCategory.create({ postId: newPost.id, categoryId: cat }));
-    const newCategoryPost = await Promise.all(categoriesPost);
-    console.log(newCategoryPost, '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      createPostCategory(newPost.id, cat));
+    await Promise.all(categoriesPost);
     return res.status(201).json(newPost);
   } catch (e) {
     next(e);
   }
 };
 
-const getAllPosts = async (req, res, next) => {
+const getAllPosts = async (_req, res, next) => {
   try {
-    const allPosts = await BlogPost
-      .findAll({
-        include:
-          [
-            { model: User, as: 'user', attributes: { exclude: 'password' } },
-            { model: Category, as: 'categories' },
-          ],
-        attributes: { exclude: 'UserId' },
-      });
+    const allPosts = await findAllPosts();
     return res.status(200).json(allPosts);
   } catch (e) {
     next(e);
@@ -39,15 +32,7 @@ const getAllPosts = async (req, res, next) => {
 const getPostById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const allPosts = await BlogPost
-      .findOne({ where: { id }, 
-        include:
-          [
-            { model: User, as: 'user', attributes: { exclude: 'password' } },
-            { model: Category, as: 'categories' },
-          ],
-        attributes: { exclude: 'UserId' },
-      });
+    const allPosts = await findPostByIdFiltered(id);
     return res.status(200).json(allPosts);
   } catch (e) {
     next(e);
