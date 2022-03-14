@@ -1,4 +1,4 @@
-const { BlogPost, User, PostCategory } = require('../models');
+const { BlogPost, User, PostCategory, Category } = require('../models');
 const { isValidToken } = require('../services/jwtSerice');
 
 const createPost = async (req, res, next) => {
@@ -19,6 +19,24 @@ const createPost = async (req, res, next) => {
   }
 };
 
+const getAllPosts = async (req, res, next) => {
+  try {
+    const allPosts = await BlogPost
+      .findAll({
+        include:
+          [
+            { model: User, as: 'user', attributes: { exclude: 'password' } },
+            { model: Category, as: 'categories' },
+          ],
+        attributes: { exclude: 'UserId' },
+      });
+    return res.status(200).json(allPosts);
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   createPost,
+  getAllPosts,
 };
