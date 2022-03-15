@@ -1,4 +1,4 @@
-const { BlogPost, User, Category } = require('../models');
+const { BlogPost, User, Category, PostCategory } = require('../models');
 
 const createNewPost = async (title, content, userId) => {
   const newPost = await BlogPost.create({ title, userId, content });
@@ -36,7 +36,12 @@ const findPostById = async (id) => BlogPost.findOne({ where: { id } });
 
 const findPostEdited = async (id) => BlogPost.findOne({
   where: { id },
-  include: { model: Category, as: 'categories', attributes: { exclude: 'PostCategory' } },
+  include: {
+    model: Category,
+    as: 'categories',
+    attributes: { exclude: ['PostCategory'] },
+    through: { attributes: [] },
+  },
   attributes: { exclude: ['updated', 'published', 'UserId'] },
 });
 
