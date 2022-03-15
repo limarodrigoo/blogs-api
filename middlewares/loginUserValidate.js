@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { getUserIdByToken } = require('../services/jwtSerice');
 
 const schema = Joi.object({
   email: Joi.string().email().required().empty()
@@ -29,4 +30,16 @@ const loginUserValidate = (req, res, next) => {
   }
 };
 
-module.exports = { loginUserValidate };
+const getUserId = async (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
+    const id = await getUserIdByToken(authorization);
+    if (!id) return res.status(404).json({ message: 'User not found' });
+    req.id = id;
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
+
+module.exports = { loginUserValidate, getUserId };

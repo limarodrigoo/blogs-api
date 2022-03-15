@@ -1,4 +1,8 @@
-const { createNewUser, findAllUsers, findUserById, find } = require('../services/userService');
+const { createNewUser, 
+  findAllUsers, 
+  findUserById, 
+  find, 
+  deleteUserById } = require('../services/userService');
 const { genToken } = require('../services/jwtSerice');
 
 const createUser = async (req, res, next) => {
@@ -50,9 +54,21 @@ const login = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  try {
+    const { id } = req;
+    console.log(id, '>>>>>>>>>>>>>>>ID<<<<<<<<<<<<<<<<');
+    await deleteUserById(id);
+    return res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   createUser,
   getAll,
   getById,
   login,
+  deleteUser,
 };
