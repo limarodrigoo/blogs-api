@@ -9,7 +9,7 @@ const createPost = async (req, res, next) => {
     const { authorization } = req.headers;
     const { title, content, categoryIds } = req.body;
 
-    const id = getUserIdByToken(authorization);
+    const id = await getUserIdByToken(authorization);
 
     const newPost = await createNewPost(title, content, id);
     const categoriesPost = categoryIds.map((cat) =>
