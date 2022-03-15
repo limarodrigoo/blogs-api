@@ -57,6 +57,8 @@ const editPostById = async (id, title, content) => {
   return newPost;
 };
 
+const deletePostById = async (id) => BlogPost.destroy({ where: { id } });
+
 module.exports = {
   createNewPost,
   findAllPosts,
@@ -64,4 +66,5 @@ module.exports = {
   findPostById,
   editPostById,
   findPostEdited,
+  deletePostById,
 };
