@@ -3,7 +3,8 @@ const { createPost,
   getAllPosts,
   getPostById,
   editPost,
-  deletePost } = require('../controllers/postController');
+  deletePost,
+  getPostByText } = require('../controllers/postController');
 const { checkToken } = require('../middlewares/jwtToken');
 const {
   createPostValidate,
@@ -18,6 +19,7 @@ const router = express.Router();
 
 router.use(checkToken);
 
+router.get('/search', checkToken, getPostByText);
 router.post('/', createPostValidate, categoryExists, createPost);
 router.get('/', getAllPosts);
 router.get('/:id', idPostValidate, getPostById);

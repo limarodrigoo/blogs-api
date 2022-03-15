@@ -1,7 +1,10 @@
 const { getUserIdByToken } = require('../services/jwtSerice');
 const { createNewPost, findAllPosts,
   findPostByIdFiltered,
-  editPostById, findPostEdited, deletePostById } = require('../services/postService');
+  editPostById, 
+  findPostEdited, 
+  deletePostById,
+  findPostByText } = require('../services/postService');
 const { createPostCategory } = require('../services/postCategoryService');
 
 const createPost = async (req, res, next) => {
@@ -64,10 +67,21 @@ const deletePost = async (req, res, next) => {
   }
 };
 
+const getPostByText = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+    const posts = await findPostByText(q);
+    return res.status(200).json(posts);
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getPostById,
   editPost,
   deletePost,
+  getPostByText,
 };
