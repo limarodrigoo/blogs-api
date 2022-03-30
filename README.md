@@ -1,5 +1,5 @@
 
-# Blogs Apo
+# Blogs Api
 
 O projeto, feito durante curso da trybe, foi meu primeiro contato com uma ORM 
 (sequelize), e trata-se de uma API de um blog.
